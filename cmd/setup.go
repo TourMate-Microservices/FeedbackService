@@ -1,7 +1,11 @@
 package cmd
 
 import (
-	api_route "tourmate/feedback-service/api_route"
+	"log"
+	"os"
+	"tourmate/feedback-service/constant/env"
+	api "tourmate/feedback-service/route/api"
+
 	//_ "tourmate/feedback-service/docs"
 
 	"github.com/gin-gonic/gin"
@@ -9,12 +13,29 @@ import (
 	//gin_swagger "github.com/swaggo/gin-swagger"
 )
 
-func setupApiRoutes(server *gin.Engine, port string) {
+func setupApiRoutes(logger *log.Logger) {
+	// Initialize gin server for API
+	var server = gin.Default()
+
+	// Config CORS for requests
+	corsConfig(server)
+
+	// Get API port
+	var apiPort string = os.Getenv(env.API_PORT)
+
+	// Set up swagger
+	setupSwagger(server, apiPort)
+
 	// Feedback API endpoints
-	api_route.InitializeFeedbackHandlerRoute(server, port)
+	api.InitializeFeedbackHandlerRoute(server, apiPort)
 
 	// Platform Feedback API endpoints
-	api_route.InitializePlatformFeedbackHandlerRoute(server, port)
+	api.InitializePlatformFeedbackHandlerRoute(server, apiPort)
+
+	// Run server
+	if err := server.Run(":" + apiPort); err != nil {
+		logger.Println("Error run server - " + err.Error())
+	}
 }
 
 func setupSwagger(server *gin.Engine, port string) {
@@ -26,4 +47,8 @@ func setupSwagger(server *gin.Engine, port string) {
 
 	// Add swagger route
 	//server.GET("swagger/*any", gin_swagger.WrapHandler(swagger_files.Handler))
+}
+
+func setupGrpcRoutes(logger *log.Logger) {
+
 }
