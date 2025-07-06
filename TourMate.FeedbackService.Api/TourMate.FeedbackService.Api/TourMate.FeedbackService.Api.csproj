@@ -17,4 +17,8 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TourMate.FeedbackService.Services\TourMate.FeedbackService.Services.csproj" />
+  </ItemGroup>
+
 </Project>
