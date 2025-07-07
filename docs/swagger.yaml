@@ -21,6 +21,21 @@ definitions:
       updated_at:
         type: string
     type: object
+  entity.PlatformFeedback:
+    properties:
+      account_id:
+        type: integer
+      content:
+        type: string
+      created_at:
+        type: string
+      feedback_id:
+        type: integer
+      payment_id:
+        type: integer
+      rating:
+        type: integer
+    type: object
   request.CreateFeedbackRequest:
     properties:
       content:
@@ -38,6 +53,21 @@ definitions:
     - invoice_id
     - rating
     - tour_guide_id
+    type: object
+  request.CreatePlatformFeedbackRequest:
+    properties:
+      account_id:
+        type: integer
+      content:
+        type: string
+      payment_id:
+        type: integer
+      rating:
+        type: integer
+    required:
+    - account_id
+    - payment_id
+    - rating
     type: object
   request.RemoveFeedbackRequest:
     properties:
@@ -57,6 +87,20 @@ definitions:
         type: integer
       request:
         $ref: '#/definitions/request.RemoveFeedbackRequest'
+    type: object
+  request.UpdatePlatformFeedbackRequest:
+    properties:
+      actor_id:
+        type: integer
+      content:
+        type: string
+      feedback_id:
+        type: integer
+      rating:
+        type: integer
+    required:
+    - actor_id
+    - feedback_id
     type: object
   response.MessageApiResponse:
     properties:
@@ -121,7 +165,7 @@ paths:
       - BearerAuth: []
       summary: Remove a feedback
       tags:
-      - Feedback
+      - feedbacks
     get:
       consumes:
       - application/json
@@ -143,6 +187,10 @@ paths:
         in: query
         name: order
         type: string
+      - description: Rating
+        in: query
+        name: rating
+        type: integer
       - description: The owner ID of this feedback
         in: query
         name: customer_id
@@ -170,7 +218,7 @@ paths:
       - BearerAuth: []
       summary: Get all feedbacks
       tags:
-      - Feedback
+      - feedbacks
     post:
       consumes:
       - application/json
@@ -205,7 +253,7 @@ paths:
       - BearerAuth: []
       summary: Create a new feedback
       tags:
-      - Feedback
+      - feedbacks
     put:
       consumes:
       - application/json
@@ -240,7 +288,7 @@ paths:
       - BearerAuth: []
       summary: Update an existing feedback
       tags:
-      - Feedback
+      - feedbacks
   /api/v1/feedbacks/{id}:
     get:
       consumes:
@@ -266,7 +314,7 @@ paths:
       - BearerAuth: []
       summary: Get a single feedback by ID
       tags:
-      - Feedback
+      - feedbacks
   /api/v1/feedbacks/user/{id}:
     get:
       consumes:
@@ -294,6 +342,10 @@ paths:
         in: query
         name: order
         type: string
+      - description: Rating
+        in: query
+        name: rating
+        type: integer
       - description: Tour guide ID
         in: query
         name: tour_guide_id
@@ -317,7 +369,196 @@ paths:
       - BearerAuth: []
       summary: Get feedbacks by user
       tags:
-      - Feedback
+      - feedbacks
+  /api/v1/platform-feedbacks:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a paginated list of platform feedbacks with optional filters
+      parameters:
+      - description: Page number
+        in: query
+        name: page_number
+        type: integer
+      - description: Search keyword
+        in: query
+        name: keyword
+        type: string
+      - description: Filter property
+        in: query
+        name: filter_prop
+        type: string
+      - description: Sort order (ASC or DESC)
+        in: query
+        name: order
+        type: string
+      - description: Account ID
+        in: query
+        name: account_id
+        type: integer
+      - description: Rating
+        in: query
+        name: rating
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.PaginationDataResponse'
+        "400":
+          description: Invalid data. Please try again.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all platform feedbacks
+      tags:
+      - platform-feedbacks
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create Platform Feedback Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreatePlatformFeedbackRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+        "400":
+          description: Invalid data. Please try again.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+        "401":
+          description: You have no rights to access this action.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+        "500":
+          description: There is something wrong in the system during the process.
+            Please try again later.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new feedback
+      tags:
+      - platform-feedbacks
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update Feedback Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdatePlatformFeedbackRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+        "400":
+          description: Invalid data. Please try again.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+        "401":
+          description: You have no rights to access this action.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+        "500":
+          description: There is something wrong in the system during the process.
+            Please try again later.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+      security:
+      - BearerAuth: []
+      summary: Update an existing feedback
+      tags:
+      - platform-feedbacks
+  /api/v1/platform-feedbacks/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Platform Feedback ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.PlatformFeedback'
+        "400":
+          description: Invalid data. Please try again.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+      security:
+      - BearerAuth: []
+      summary: Get a single platform feedback by ID
+      tags:
+      - platform-feedbacks
+  /api/v1/platform-feedbacks/user/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve platform feedbacks filtered by customer ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Page number
+        in: query
+        name: page_number
+        type: integer
+      - description: Search keyword
+        in: query
+        name: keyword
+        type: string
+      - description: Filter property
+        in: query
+        name: filter_prop
+        type: string
+      - description: Sort order (ASC or DESC)
+        in: query
+        name: order
+        type: string
+      - description: Rating
+        in: query
+        name: rating
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.PaginationDataResponse'
+        "400":
+          description: Invalid data. Please try again.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+      security:
+      - BearerAuth: []
+      summary: Get platform feedbacks by user
+      tags:
+      - platform-feedbacks
 schemes:
 - http
 - https

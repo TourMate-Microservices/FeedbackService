@@ -14,7 +14,7 @@ import (
 // GetFeedbacks godoc
 // @Summary      Get all feedbacks
 // @Description  Retrieve a paginated list of feedbacks with optional filters
-// @Tags         Feedback
+// @Tags         feedbacks
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth
@@ -22,6 +22,7 @@ import (
 // @Param        keyword     query string false "Search keyword"
 // @Param        filter_prop query string false "Filter property"
 // @Param        order       query string false "Sort order (ASC or DESC)"
+// @Param        rating      query int false "Rating"
 // @Param        customer_id query int false "The owner ID of this feedback"
 // @Param        tour_guide_id query int false "Tour guide ID"
 // @Param        invoice_id  query int false "Invoice ID"
@@ -55,7 +56,7 @@ func GetFeedbacks(ctx *gin.Context) {
 // GetFeedbacksByUser godoc
 // @Summary      Get feedbacks by user
 // @Description  Retrieve feedbacks filtered by customer ID
-// @Tags         Feedback
+// @Tags         feedbacks
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth
@@ -64,6 +65,7 @@ func GetFeedbacks(ctx *gin.Context) {
 // @Param        keyword     query string false "Search keyword"
 // @Param        filter_prop query string false "Filter property"
 // @Param        order       query string false "Sort order (ASC or DESC)"
+// @Param        rating      query int false "Rating"
 // @Param        tour_guide_id query int false "Tour guide ID"
 // @Param        invoice_id  query int false "Invoice ID"
 // @Success      200 {object} response.PaginationDataResponse
@@ -99,7 +101,7 @@ func GetFeedbacksByUser(ctx *gin.Context) {
 
 // GetFeedbackById godoc
 // @Summary      Get a single feedback by ID
-// @Tags         Feedback
+// @Tags         feedbacks
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth
@@ -129,7 +131,7 @@ func GetFeedbackById(ctx *gin.Context) {
 
 // CreateFeedback godoc
 // @Summary      Create a new feedback
-// @Tags         Feedback
+// @Tags         feedbacks
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth
@@ -161,7 +163,7 @@ func CreateFeedback(ctx *gin.Context) {
 
 // UpdateFeedback godoc
 // @Summary      Update an existing feedback
-// @Tags         Feedback
+// @Tags         feedbacks
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth
@@ -193,7 +195,7 @@ func UpdateFeedback(ctx *gin.Context) {
 
 // RemoveFeedback godoc
 // @Summary      Remove a feedback
-// @Tags         Feedback
+// @Tags         feedbacks
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth
