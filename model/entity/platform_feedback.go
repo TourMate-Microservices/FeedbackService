@@ -14,3 +14,7 @@ type PlatformFeedback struct {
 func (p PlatformFeedback) GetPlatformFeedbackTable() string {
 	return "PlatformFeedback"
 }
+
+func (p PlatformFeedback) GetPlatformFeedbackLimitRecords() int {
+	return 10
+}

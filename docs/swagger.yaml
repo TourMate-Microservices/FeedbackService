@@ -1,0 +1,329 @@
+basePath: /
+definitions:
+  entity.Feedback:
+    properties:
+      content:
+        type: string
+      created_date:
+        type: string
+      customer_id:
+        type: integer
+      feedback_id:
+        type: integer
+      invoice_id:
+        type: integer
+      is_deleted:
+        type: boolean
+      rating:
+        type: integer
+      tour_guide_id:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  request.CreateFeedbackRequest:
+    properties:
+      content:
+        type: string
+      customer_id:
+        type: integer
+      invoice_id:
+        type: integer
+      rating:
+        type: integer
+      tour_guide_id:
+        type: integer
+    required:
+    - customer_id
+    - invoice_id
+    - rating
+    - tour_guide_id
+    type: object
+  request.RemoveFeedbackRequest:
+    properties:
+      actor_id:
+        type: integer
+      feedback_id:
+        type: integer
+    required:
+    - actor_id
+    - feedback_id
+    type: object
+  request.UpdateFeedbackRequest:
+    properties:
+      content:
+        type: string
+      rating:
+        type: integer
+      request:
+        $ref: '#/definitions/request.RemoveFeedbackRequest'
+    type: object
+  response.MessageApiResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  response.PaginationDataResponse:
+    properties:
+      data: {}
+      has_next:
+        type: boolean
+      has_previous:
+        type: boolean
+      page:
+        type: integer
+      per_page:
+        type: integer
+      total_count:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API for Feedback service
+  title: Tourmate - Feedback Service API
+  version: "1.0"
+paths:
+  /api/v1/feedbacks:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Remove Feedback Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.RemoveFeedbackRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+        "400":
+          description: Invalid data. Please try again.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+        "401":
+          description: You have no rights to access this action.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+        "500":
+          description: There is something wrong in the system during the process.
+            Please try again later.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+      security:
+      - BearerAuth: []
+      summary: Remove a feedback
+      tags:
+      - Feedback
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a paginated list of feedbacks with optional filters
+      parameters:
+      - description: Page number
+        in: query
+        name: page_number
+        type: integer
+      - description: Search keyword
+        in: query
+        name: keyword
+        type: string
+      - description: Filter property
+        in: query
+        name: filter_prop
+        type: string
+      - description: Sort order (ASC or DESC)
+        in: query
+        name: order
+        type: string
+      - description: The owner ID of this feedback
+        in: query
+        name: customer_id
+        type: integer
+      - description: Tour guide ID
+        in: query
+        name: tour_guide_id
+        type: integer
+      - description: Invoice ID
+        in: query
+        name: invoice_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.PaginationDataResponse'
+        "400":
+          description: Invalid data. Please try again.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all feedbacks
+      tags:
+      - Feedback
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create Feedback Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateFeedbackRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+        "400":
+          description: Invalid data. Please try again.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+        "401":
+          description: You have no rights to access this action.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+        "500":
+          description: There is something wrong in the system during the process.
+            Please try again later.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new feedback
+      tags:
+      - Feedback
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update Feedback Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateFeedbackRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+        "400":
+          description: Invalid data. Please try again.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+        "401":
+          description: You have no rights to access this action.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+        "500":
+          description: There is something wrong in the system during the process.
+            Please try again later.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+      security:
+      - BearerAuth: []
+      summary: Update an existing feedback
+      tags:
+      - Feedback
+  /api/v1/feedbacks/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Feedback ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Feedback'
+        "400":
+          description: Invalid data. Please try again.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+      security:
+      - BearerAuth: []
+      summary: Get a single feedback by ID
+      tags:
+      - Feedback
+  /api/v1/feedbacks/user/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve feedbacks filtered by customer ID
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Page number
+        in: query
+        name: page_number
+        type: integer
+      - description: Search keyword
+        in: query
+        name: keyword
+        type: string
+      - description: Filter property
+        in: query
+        name: filter_prop
+        type: string
+      - description: Sort order (ASC or DESC)
+        in: query
+        name: order
+        type: string
+      - description: Tour guide ID
+        in: query
+        name: tour_guide_id
+        type: integer
+      - description: Invoice ID
+        in: query
+        name: invoice_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.PaginationDataResponse'
+        "400":
+          description: Invalid data. Please try again.
+          schema:
+            $ref: '#/definitions/response.MessageApiResponse'
+      security:
+      - BearerAuth: []
+      summary: Get feedbacks by user
+      tags:
+      - Feedback
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

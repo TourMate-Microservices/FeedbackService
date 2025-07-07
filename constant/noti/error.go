@@ -27,3 +27,8 @@ const (
 
 	DB_SET_CONNECTION_STRING_ERR_MSG string = "Error while setting database connection string - "
 )
+
+// gRPC
+const (
+	GRPC_CONNECTION_ERR_MSG string = "Error while connection to %s service gRPC - "
+)
